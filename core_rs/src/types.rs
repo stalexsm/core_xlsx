@@ -135,6 +135,34 @@ impl XLSXSheet {
         Ok(())
     }
 
+    /// Метод для добавления данных по объединению ячеек.
+    pub fn set_merged_cells(
+        &mut self,
+        start_row: u32,
+        end_row: u32,
+        start_column: u32,
+        end_column: u32,
+    ) -> Result<()> {
+        // Iterate through all cells in the merge range
+        for row in start_row..=end_row {
+            for col in start_column..=end_column {
+                if let Some(cell) = self
+                    .cells
+                    .iter_mut()
+                    .find(|c| c.row == row && c.column == col)
+                {
+                    cell.is_merge = true;
+                    cell.start_row = Some(start_row);
+                    cell.end_row = Some(end_row);
+                    cell.start_column = Some(start_column);
+                    cell.end_column = Some(end_column);
+                }
+            }
+        }
+
+        Ok(())
+    }
+
     /// Поиск ячейки по шаблону
     pub fn find_cell_pattern_regex(&self, pattern: &str) -> Result<Option<XLSXSheetCell>> {
         HelperSheetCell::find_cell_pattern_regex(pattern, &self.cells)
@@ -256,24 +284,6 @@ impl XLSXSheetCell {
             self.number_format = get_number_format_by_datatype(data_type);
             self.data_type = data_type.to_string();
         }
-
-        Ok(())
-    }
-
-    /// Метод для добавления данных по объединению ячеек.
-    pub fn set_merge(
-        &mut self,
-        start_row: u32,
-        end_row: u32,
-        start_column: u32,
-        end_column: u32,
-    ) -> Result<()> {
-        self.is_merge = true;
-
-        self.start_row = Some(start_row);
-        self.end_row = Some(end_row);
-        self.start_column = Some(start_column);
-        self.end_column = Some(end_column);
 
         Ok(())
     }

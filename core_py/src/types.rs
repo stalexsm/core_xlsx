@@ -175,6 +175,21 @@ impl WrapperXLSXSheet {
         })
     }
 
+    /// Метод для добавления данных по объединению ячеек.
+    pub fn set_merged_cells(
+        &mut self,
+        start_row: u32,
+        end_row: u32,
+        start_column: u32,
+        end_column: u32,
+    ) -> PyResult<()> {
+        Python::with_gil(|_py| {
+            self.0
+                .set_merged_cells(start_row, end_row, start_column, end_column)
+                .map_err(|e| PyRuntimeError::new_err(format!("{}", e)))
+        })
+    }
+
     /// Поиск ячейки по шаблону
     pub fn find_cell_pattern_regex(&self, pattern: &str) -> PyResult<Option<WrapperXLSXSheetCell>> {
         Python::with_gil(|py| {
@@ -473,21 +488,6 @@ impl WrapperXLSXSheetCell {
             self.0.comment = Some(value);
 
             Ok(())
-        })
-    }
-
-    /// Метод для добавления данных по объединению ячеек.
-    pub fn set_merge(
-        &mut self,
-        start_row: u32,
-        end_row: u32,
-        start_column: u32,
-        end_column: u32,
-    ) -> PyResult<()> {
-        Python::with_gil(|_py| {
-            self.0
-                .set_merge(start_row, end_row, start_column, end_column)
-                .map_err(|e| PyRuntimeError::new_err(format!("{}", e)))
         })
     }
 

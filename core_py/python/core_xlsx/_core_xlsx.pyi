@@ -89,6 +89,17 @@ class XLSXSheet:
         """Метод удаления строк"""
         ...
 
+    @final
+    def set_merged_cells(
+        self,
+        start_row: int,
+        end_row: int,
+        start_column: int,
+        end_column: int,
+    ) -> None:
+        """Метод для добавления данных по объединению ячеек."""
+        ...
+
 class XLSXSheetCell:
     """Тип данных ячеек листа с которыми работает парсер."""
 
@@ -205,16 +216,7 @@ class XLSXSheetCell:
         """Проверить, является ли значение ячейки empty"""
         ...
 
-    def set_merge(
-        self,
-        start_row: int,
-        end_row: int,
-        start_column: int,
-        end_column: int,
-    ) -> None:
-        """Метод для добавления данных по объединению ячеек."""
-        ...
-
+    @final
     def set_style_id(self, value: str) -> None:
         """Метод для добавления стиля к ячейки"""
         ...
