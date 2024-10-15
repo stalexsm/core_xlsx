@@ -40,7 +40,7 @@ class XLSXSheet:
         ...
 
     @final
-    def find_cells_for_columns_pattern_regex(
+    def find_cells_for_cols_pattern_regex(
         self, pattern: str, row_stop: int | None = None
     ) -> Sequence[XLSXSheetCell]:
         """Функция поиска ячейеек строк для колонок которые соответствуют патерну."""
