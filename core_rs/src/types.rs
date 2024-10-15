@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use anyhow::{bail, Result};
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
@@ -45,7 +43,7 @@ impl XLSXSheet {
 
     /// Добавление значения в ячейку по координате.
     /// Дополнительно создаются несуществующие ячейки.
-    pub fn write_cell(&mut self, row: u32, col: u32, value: String) -> Result<Arc<XLSXSheetCell>> {
+    pub fn write_cell(&mut self, row: u32, col: u32, value: String) -> Result<&mut XLSXSheetCell> {
         let cell_index = self
             .cells
             .iter()
@@ -55,7 +53,7 @@ impl XLSXSheet {
             Some(index) => {
                 self.cells[index].set_value(value)?;
 
-                Ok(Arc::new(self.cells[index].clone()))
+                Ok(&mut self.cells[index])
             }
             None => {
                 // Обновим максимальные значения
@@ -64,7 +62,7 @@ impl XLSXSheet {
 
                 // Добавление заданной ячейки
                 let new_cell = XLSXSheetCell::new(row, col, Some(value));
-                self.cells.push(new_cell.clone());
+                self.cells.push(new_cell);
 
                 // Генерация несуществующих ячеек.
                 for r in 1..=row {
@@ -80,7 +78,7 @@ impl XLSXSheet {
                 self.cells
                     .sort_by(|a, b| a.row.cmp(&b.row).then_with(|| a.column.cmp(&b.column)));
 
-                Ok(Arc::new(new_cell))
+                Ok(self.cells.last_mut().unwrap())
             }
         }
     }
