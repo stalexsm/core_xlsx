@@ -32,7 +32,9 @@ poetry add core-xlsx
 from core_xlsx import XLSXSheet, Service, HelperSheet
 
 class MyService(Service):
-    def summary_0(self, sheets):
+    def summary_0(self, sheets, /, **kwargs):
+        """Данный метод предназначен для формирования отчета"""
+
         h = HelperSheet(sheets)
         sheet = h.find_sheet_by_pattern("Отчет")
 
@@ -42,6 +44,14 @@ class MyService(Service):
                 total = float(cell.value)
                 print(f"Итоговая сумма: {total}")
 
+        # Вызовем метод форматирования
+        sheets = self.fmt_0(sheets)
+
+        return sheets
+
+
+    def fmt_0(self, sheets):
+        """Данный метод предназначен для форматирования отчета"""
         return sheets
 
 # Использование
