@@ -45,12 +45,12 @@ class MyService(Service):
                 print(f"Итоговая сумма: {total}")
 
         # Вызовем метод форматирования
-        sheets = self.fmt_0(sheets)
+        sheets = self.fmt_0(sheets, year=2024)
 
         return sheets
 
 
-    def fmt_0(self, sheets):
+    def fmt_0(self, sheets, /, **kwargs):
         """Данный метод предназначен для форматирования отчета"""
         return sheets
 
