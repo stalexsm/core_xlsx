@@ -152,7 +152,7 @@ impl WrapperXLSXSheet {
         Python::with_gil(|_py| {
             self.0
                 .write_cell(row, col, value)
-                .map(|cell| WrapperXLSXSheetCell((*cell).clone()))
+                .map(|cell| WrapperXLSXSheetCell(cell.clone()))
                 .map_err(|e| PyRuntimeError::new_err(format!("Failed to write cell: {}", e)))
         })
     }
