@@ -393,12 +393,27 @@ class Service(ABC):
         """
         ...
 
-class Formatter(ABC):
-    """Сервис"""
-
-    def __init__(self: Self) -> None:
+    def summary_6(
+        self: Self, sheets: Sequence[Any], /, **kwargs: Any
+    ) -> Sequence[XLSXSheet]:
         """
-        Инициализация парсера
+        Данный метод для реализации генерации данных сервиса
+        """
+        ...
+
+    def summary_7(
+        self: Self, sheets: Sequence[Any], /, **kwargs: Any
+    ) -> Sequence[XLSXSheet]:
+        """
+        Данный метод для реализации генерации данных сервиса
+        """
+        ...
+
+    def summary_8(
+        self: Self, sheets: Sequence[Any], /, **kwargs: Any
+    ) -> Sequence[XLSXSheet]:
+        """
+        Данный метод для реализации генерации данных сервиса
         """
         ...
 
@@ -451,6 +466,30 @@ class Formatter(ABC):
         """
         ...
 
+    def fmt_6(
+        self: Self, sheets: Sequence[XLSXSheet], /, **kwargs: Any
+    ) -> Sequence[XLSXSheet]:
+        """
+        Данный метод для форматирования отчета сервиса.
+        """
+        ...
+
+    def fmt_7(
+        self: Self, sheets: Sequence[XLSXSheet], /, **kwargs: Any
+    ) -> Sequence[XLSXSheet]:
+        """
+        Данный метод для форматирования отчета сервиса.
+        """
+        ...
+
+    def fmt_8(
+        self: Self, sheets: Sequence[XLSXSheet], /, **kwargs: Any
+    ) -> Sequence[XLSXSheet]:
+        """
+        Данный метод для форматирования отчета сервиса.
+        """
+        ...
+
 def column_number_to_letter(column: int) -> str:
     """Функция для преобразования номера колонки в букву"""
     ...
@@ -461,7 +500,6 @@ def version() -> str:
 
 __all__ = (
     "Service",
-    "Formatter",
     "HelperSheet",
     "HelperSheetCell",
     "XLSXSheet",

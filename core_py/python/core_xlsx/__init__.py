@@ -1,6 +1,5 @@
 from ._core_xlsx import (
     Service,
-    Formatter,
     HelperSheet,
     HelperSheetCell,
     XLSXSheet,
@@ -12,7 +11,6 @@ from ._core_xlsx import (
 
 __all__ = (
     "Service",
-    "Formatter",
     "XLSXSheet",
     "XLSXSheetCell",
     "HelperSheet",

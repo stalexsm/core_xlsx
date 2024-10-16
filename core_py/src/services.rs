@@ -33,7 +33,7 @@ impl Service {
         &self,
         _sheets: &Bound<'_, PyList>,
         _kwargs: &Bound<'_, PyAny>,
-    ) -> PyResult<Vec<WrapperXLSXSheet>> {
+    ) -> PyResult<&Bound<'_, PyList>> {
         Python::with_gil(|_py| {
             Err(PyNotImplementedError::new_err(
                 "Method 'summary_0' is not implemented",
@@ -49,6 +49,7 @@ impl Service {
     ) -> PyResult<Vec<WrapperXLSXSheet>> {
         Python::with_gil(|_py| Ok(vec![]))
     }
+
     #[pyo3(text_signature = "($self, sheets, /, **kwargs=None)")]
     pub fn summary_2(
         &self,
@@ -82,28 +83,34 @@ impl Service {
     ) -> PyResult<Vec<WrapperXLSXSheet>> {
         Python::with_gil(|_py| Ok(vec![]))
     }
-}
 
-#[pyclass]
-#[pyo3(module = "core_xlsx", frozen, subclass)]
-#[derive(Debug, Clone, Default)]
-pub struct Formatter;
-
-#[pymethods]
-impl Formatter {
-    #[new]
-    pub fn new() -> Self {
-        Python::with_gil(|_py| Self {})
+    #[pyo3(text_signature = "($self, sheets, /, **kwargs=None)")]
+    pub fn summary_6(
+        &self,
+        _sheets: &Bound<'_, PyList>,
+        _kwargs: &Bound<'_, PyAny>,
+    ) -> PyResult<Vec<WrapperXLSXSheet>> {
+        Python::with_gil(|_py| Ok(vec![]))
     }
 
-    pub fn __repr__(slf: &Bound<'_, Self>) -> PyResult<String> {
-        Python::with_gil(|_py| {
-            let class_name = slf.get_type().qualname()?;
-            Ok(format!("{}", class_name))
-        })
+    #[pyo3(text_signature = "($self, sheets, /, **kwargs=None)")]
+    pub fn summary_7(
+        &self,
+        _sheets: &Bound<'_, PyList>,
+        _kwargs: &Bound<'_, PyAny>,
+    ) -> PyResult<Vec<WrapperXLSXSheet>> {
+        Python::with_gil(|_py| Ok(vec![]))
     }
 
-    // Основной метод для обработки данных и получение нужных объектов листов  с ячейками.
+    #[pyo3(text_signature = "($self, sheets, /, **kwargs=None)")]
+    pub fn summary_8(
+        &self,
+        _sheets: &Bound<'_, PyList>,
+        _kwargs: &Bound<'_, PyAny>,
+    ) -> PyResult<Vec<WrapperXLSXSheet>> {
+        Python::with_gil(|_py| Ok(vec![]))
+    }
+
     #[pyo3(text_signature = "($self, sheets, /, **kwargs=None)")]
     pub fn fmt_0(
         &self,
@@ -150,6 +157,30 @@ impl Formatter {
     }
 
     pub fn fmt_5(
+        &self,
+        _sheets: &Bound<'_, PyList>,
+        _kwargs: &Bound<'_, PyAny>,
+    ) -> PyResult<Vec<WrapperXLSXSheet>> {
+        Python::with_gil(|_py| Ok(vec![]))
+    }
+
+    pub fn fmt_6(
+        &self,
+        _sheets: &Bound<'_, PyList>,
+        _kwargs: &Bound<'_, PyAny>,
+    ) -> PyResult<Vec<WrapperXLSXSheet>> {
+        Python::with_gil(|_py| Ok(vec![]))
+    }
+
+    pub fn fmt_7(
+        &self,
+        _sheets: &Bound<'_, PyList>,
+        _kwargs: &Bound<'_, PyAny>,
+    ) -> PyResult<Vec<WrapperXLSXSheet>> {
+        Python::with_gil(|_py| Ok(vec![]))
+    }
+
+    pub fn fmt_8(
         &self,
         _sheets: &Bound<'_, PyList>,
         _kwargs: &Bound<'_, PyAny>,

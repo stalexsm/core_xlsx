@@ -4,7 +4,7 @@ pub(crate) mod types;
 
 use helper::{WrapperHelperSheet, WrapperHelperSheetCell};
 use pyo3::prelude::*;
-use services::{Formatter, Service};
+use services::Service;
 use types::{WrapperXLSXSheet, WrapperXLSXSheetCell};
 
 /// Преобразование номера колонки в букву.
@@ -31,7 +31,6 @@ fn version() -> String {
 #[pyo3(name = "_core_xlsx")]
 fn boriy_core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<Service>()?;
-    m.add_class::<Formatter>()?;
     m.add_class::<WrapperXLSXSheet>()?;
     m.add_class::<WrapperXLSXSheetCell>()?;
     m.add_class::<WrapperHelperSheet>()?;
