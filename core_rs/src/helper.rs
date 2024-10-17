@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{bail, Result};
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
@@ -232,5 +232,28 @@ impl HelperSheetCell {
         }
 
         Ok(new_cells)
+    }
+
+    /// Получить список всех ячеек в заданном диапазоне.
+    pub fn iter_cells(
+        min_row: u32,
+        max_row: u32,
+        min_col: u32,
+        max_col: u32,
+        cells: &Vec<XLSXSheetCell>,
+    ) -> Result<Vec<XLSXSheetCell>> {
+        if min_row > max_row || min_col > max_col {
+            bail!("The coordinates of the cells were incorrectly transmitted");
+        }
+
+        let filtered_cells = cells
+            .par_iter()
+            .filter(|c| {
+                c.row >= min_row && c.row <= max_row && c.column >= min_col && c.column <= max_col
+            })
+            .cloned()
+            .collect();
+
+        Ok(filtered_cells)
     }
 }

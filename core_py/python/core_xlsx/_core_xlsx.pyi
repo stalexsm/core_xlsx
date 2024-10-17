@@ -121,6 +121,17 @@ class XLSXSheet:
         """Метод для добавления данных по объединению ячеек."""
         ...
 
+    @final
+    def iter_cells(
+        self,
+        min_row: int | None = None,
+        max_row: int | None = None,
+        min_col: int | None = None,
+        max_col: int | None = None,
+    ) -> Sequence[XLSXSheetCell]:
+        """Получить список всех ячеек в заданном диапазоне."""
+        ...
+
 class XLSXSheetCell:
     """Тип данных ячеек листа с которыми работает парсер."""
 

@@ -245,6 +245,23 @@ impl XLSXSheet {
         Ok(())
     }
 
+    /// Получить список всех ячеек в заданном диапазоне.
+    pub fn iter_cells(
+        &self,
+        min_row: Option<u32>,
+        max_row: Option<u32>,
+        min_col: Option<u32>,
+        max_col: Option<u32>,
+    ) -> Result<Vec<XLSXSheetCell>> {
+        // Получение значений, так как они необязательные.
+        let min_row = min_row.unwrap_or(1);
+        let max_row = max_row.unwrap_or(self.max_row);
+        let min_col = min_col.unwrap_or(1);
+        let max_col = max_col.unwrap_or(self.max_column);
+
+        HelperSheetCell::iter_cells(min_row, max_row, min_col, max_col, &self.cells)
+    }
+
     /// Поиск ячейки по шаблону
     pub fn find_cell_pattern_regex(&self, pattern: &str) -> Result<Option<XLSXSheetCell>> {
         HelperSheetCell::find_cell_pattern_regex(pattern, &self.cells)

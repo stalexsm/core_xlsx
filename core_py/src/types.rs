@@ -221,6 +221,25 @@ impl WrapperXLSXSheet {
         })
     }
 
+    /// Получить список всех ячеек в заданном диапазоне.
+    #[pyo3(signature=(min_row=None, max_row=None, min_col=None, max_col=None))]
+    pub fn iter_cells(
+        &self,
+        min_row: Option<u32>,
+        max_row: Option<u32>,
+        min_col: Option<u32>,
+        max_col: Option<u32>,
+    ) -> PyResult<Vec<WrapperXLSXSheetCell>> {
+        Python::with_gil(|py| {
+            py.allow_threads(|| {
+                self.0
+                    .iter_cells(min_row, max_row, min_col, max_col)
+                    .map(|cells| cells.into_iter().map(WrapperXLSXSheetCell).collect())
+                    .map_err(|e| PyRuntimeError::new_err(format!("{}", e)))
+            })
+        })
+    }
+
     /// Поиск ячейки по шаблону
     pub fn find_cell_pattern_regex(&self, pattern: &str) -> PyResult<Option<WrapperXLSXSheetCell>> {
         Python::with_gil(|py| {
