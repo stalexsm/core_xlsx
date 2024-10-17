@@ -64,21 +64,18 @@ impl WrapperXLSXSheet {
         Python::with_gil(|_py| {
             let mut s = extract_sheet!(obj, name, max_row, max_column, index, main);
 
-            s.0.cells = if obj.is_instance_of::<PyDict>() {
+            let cells_iter = if obj.is_instance_of::<PyDict>() {
                 obj.get_item("cells")?
-                    .downcast::<PyList>()?
-                    .iter()
-                    .flat_map(|c| WrapperXLSXSheetCell::from_py(&c))
-                    .map(|w| w.0)
-                    .collect::<Vec<XLSXSheetCell>>()
             } else {
                 obj.getattr("cells")?
-                    .downcast::<PyList>()?
-                    .iter()
-                    .flat_map(|c| WrapperXLSXSheetCell::from_py(&c))
-                    .map(|w| w.0)
-                    .collect::<Vec<XLSXSheetCell>>()
-            };
+            }
+            .downcast::<PyList>()?
+            .iter();
+
+            s.0.cells = cells_iter
+                .filter_map(|c| WrapperXLSXSheetCell::from_py(&c).ok())
+                .map(|w| w.0)
+                .collect();
 
             Ok(s)
         })
@@ -143,16 +140,10 @@ impl WrapperXLSXSheet {
     }
 
     /// Запись ячейки.
-    pub fn write_cell(
-        &mut self,
-        row: u32,
-        col: u32,
-        value: String,
-    ) -> PyResult<WrapperXLSXSheetCell> {
+    pub fn write_cell(&mut self, row: u32, col: u32, value: String) -> PyResult<()> {
         Python::with_gil(|_py| {
             self.0
                 .write_cell(row, col, value)
-                .map(|cell| WrapperXLSXSheetCell(cell.clone()))
                 .map_err(|e| PyRuntimeError::new_err(format!("Failed to write cell: {}", e)))
         })
     }

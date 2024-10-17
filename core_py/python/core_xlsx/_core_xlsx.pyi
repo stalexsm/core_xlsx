@@ -75,7 +75,7 @@ class XLSXSheet:
         ...
 
     @final
-    def write_cell(self, row: int, col: int, value: str) -> XLSXSheetCell:
+    def write_cell(self, row: int, col: int, value: str) -> None:
         """Добавление данных в cells"""
         ...
 

@@ -43,7 +43,7 @@ impl XLSXSheet {
 
     /// Добавление значения в ячейку по координате.
     /// Дополнительно создаются несуществующие ячейки.
-    pub fn write_cell(&mut self, row: u32, col: u32, value: String) -> Result<&mut XLSXSheetCell> {
+    pub fn write_cell(&mut self, row: u32, col: u32, value: String) -> Result<()> {
         let cell_index = self
             .cells
             .iter()
@@ -52,8 +52,6 @@ impl XLSXSheet {
         match cell_index {
             Some(index) => {
                 self.cells[index].set_value(value)?;
-
-                Ok(&mut self.cells[index])
             }
             None => {
                 // Обновим максимальные значения
@@ -77,10 +75,9 @@ impl XLSXSheet {
                 // Сортируем, чтобы все было упорядочено.
                 self.cells
                     .sort_by(|a, b| a.row.cmp(&b.row).then_with(|| a.column.cmp(&b.column)));
-
-                Ok(self.cells.last_mut().unwrap())
             }
         }
+        Ok(())
     }
 
     /// Метод для удаления колонок
