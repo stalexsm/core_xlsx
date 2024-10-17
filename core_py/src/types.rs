@@ -148,6 +148,46 @@ impl WrapperXLSXSheet {
         })
     }
 
+    /// Добавление значения в ячейку по координате с форумлой.
+    /// Дополнительно создаются несуществующие ячейки.
+    pub fn write_cell_with_formula(
+        &mut self,
+        row: u32,
+        col: u32,
+        value: String,
+        formula: String,
+    ) -> PyResult<()> {
+        Python::with_gil(|_py| {
+            self.0
+                .write_cell_with_formula(row, col, value, formula)
+                .map_err(|e| {
+                    PyRuntimeError::new_err(format!("Failed to write cell with formula: {}", e))
+                })
+        })
+    }
+
+    /// Добавление стиля в существующую ячейку по координате.
+    pub fn write_style_for_cell(&mut self, row: u32, col: u32, style_id: String) -> PyResult<()> {
+        Python::with_gil(|_py| {
+            self.0
+                .write_style_for_cell(row, col, style_id)
+                .map_err(|e| {
+                    PyRuntimeError::new_err(format!("Failed to write style for cell: {}", e))
+                })
+        })
+    }
+
+    /// Добавление стиля в существующую ячейку по координате.
+    pub fn write_formula_for_cell(&mut self, row: u32, col: u32, formula: String) -> PyResult<()> {
+        Python::with_gil(|_py| {
+            self.0
+                .write_formula_for_cell(row, col, formula)
+                .map_err(|e| {
+                    PyRuntimeError::new_err(format!("Failed to write formula for cell: {}", e))
+                })
+        })
+    }
+
     /// Метод для удаления колонок
     pub fn delete_cols(&mut self, idx: u32, cols: u32) -> PyResult<()> {
         Python::with_gil(|_py| {

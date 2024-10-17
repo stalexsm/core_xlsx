@@ -80,6 +80,91 @@ impl XLSXSheet {
         Ok(())
     }
 
+    /// Добавление значения в ячейку по координате с форумлой.
+    /// Дополнительно создаются несуществующие ячейки.
+    pub fn write_cell_with_formula(
+        &mut self,
+        row: u32,
+        col: u32,
+        value: String,
+        formula: String,
+    ) -> Result<()> {
+        let cell_index = self
+            .cells
+            .iter()
+            .position(|c| c.row == row && c.column == col);
+
+        match cell_index {
+            Some(index) => {
+                let cell = &mut self.cells[index];
+                cell.set_value(value)?;
+
+                // Установим формулу
+                cell.set_formula(formula)?;
+                cell.data_type = "f".to_string();
+            }
+            None => {
+                // Обновим максимальные значения
+                self.max_row = self.max_row.max(row);
+                self.max_column = self.max_column.max(col);
+
+                // Добавление заданной ячейки
+                let mut new_cell = XLSXSheetCell::new(row, col, Some(value));
+                new_cell.set_formula(formula)?;
+                new_cell.set_data_type("f".to_string())?;
+
+                self.cells.push(new_cell);
+
+                // Генерация несуществующих ячеек.
+                for r in 1..=row {
+                    for c in 1..=col {
+                        if !self.cells.iter().any(|x| x.row == r && x.column == c) {
+                            let cell = XLSXSheetCell::new(r, c, None);
+                            self.cells.push(cell);
+                        }
+                    }
+                }
+
+                // Сортируем, чтобы все было упорядочено.
+                self.cells
+                    .sort_by(|a, b| a.row.cmp(&b.row).then_with(|| a.column.cmp(&b.column)));
+            }
+        }
+        Ok(())
+    }
+
+    /// Добавление стиля в существующую ячейку по координате.
+    pub fn write_style_for_cell(&mut self, row: u32, col: u32, style_id: String) -> Result<()> {
+        let cell_index = self
+            .cells
+            .iter()
+            .position(|c| c.row == row && c.column == col);
+
+        if let Some(index) = cell_index {
+            let cell = &mut self.cells[index];
+            cell.set_style_id(style_id)?;
+        }
+
+        Ok(())
+    }
+
+    /// Добавление стиля в существующую ячейку по координате.
+    pub fn write_formula_for_cell(&mut self, row: u32, col: u32, formula: String) -> Result<()> {
+        let cell_index = self
+            .cells
+            .iter()
+            .position(|c| c.row == row && c.column == col);
+
+        if let Some(index) = cell_index {
+            let cell = &mut self.cells[index];
+
+            cell.set_formula(formula)?;
+            cell.set_data_type("f".to_string())?;
+        }
+
+        Ok(())
+    }
+
     /// Метод для удаления колонок
     pub fn delete_cols(&mut self, idx: u32, amount: u32) -> Result<()> {
         // Remove cells in the specified columns

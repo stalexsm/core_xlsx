@@ -80,6 +80,27 @@ class XLSXSheet:
         ...
 
     @final
+    def write_cell_with_formula(
+        self,
+        row: int,
+        col: int,
+        value: str,
+        formula: str,
+    ) -> None:
+        """Добавление значения в ячейку по координате с форумлой."""
+        ...
+
+    @final
+    def write_style_for_cell(self, row: int, col: int, style_id: str) -> None:
+        """Добавление стиля в существующую ячейку по координате."""
+        ...
+
+    @final
+    def write_formula_for_cell(self, row: int, col: int, formula: str) -> None:
+        """Добавление стиля в существующую ячейку по координате."""
+        ...
+
+    @final
     def delete_cols(self, idx: int, cols: int) -> None:
         """Метод удаления колонок"""
         ...
