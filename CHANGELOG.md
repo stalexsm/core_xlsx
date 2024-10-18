@@ -1,3 +1,11 @@
+## 0.5.1 (2024-10-18)
+
+### Fix
+
+- Исправлена обработка XLSXSheetCell::value, если из python передается None
+- Оптимизация метода write_cell_with_formula
+- Оптимизация метода write_cell
+
 ## 0.5.0 (2024-10-18)
 
 ### Feat
