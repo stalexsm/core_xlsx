@@ -340,6 +340,18 @@ class HelperSheetCell:
 
     @final
     @staticmethod
+    def iter_cells(
+        min_row: int | None,
+        max_row: int | None,
+        min_col: int | None,
+        max_col: int | None,
+        cells: Sequence[XLSXSheetCell],
+    ) -> Sequence[XLSXSheetCell]:
+        """Получить список всех ячеек в заданном диапазоне."""
+        ...
+
+    @final
+    @staticmethod
     def find_cells_by_range_rows(
         start_row: int,
         end_row: int,
