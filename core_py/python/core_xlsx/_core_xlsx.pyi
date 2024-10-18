@@ -530,6 +530,10 @@ def version() -> str:
     """Для получения версии"""
     ...
 
+def xlsxheets_to_json(sheets: Sequence[XLSXSheet]) -> str:
+    """Преобразование данных в json"""
+    ...
+
 __all__ = (
     "Service",
     "HelperSheet",
@@ -538,4 +542,5 @@ __all__ = (
     "XLSXSheetCell",
     "column_number_to_letter",
     "version",
+    "xlsxheets_to_json",
 )

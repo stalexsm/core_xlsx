@@ -6,6 +6,7 @@ from ._core_xlsx import (
     XLSXSheetCell,
     column_number_to_letter,
     version,
+    xlsxheets_to_json,
 )
 
 
@@ -17,4 +18,5 @@ __all__ = (
     "HelperSheetCell",
     "column_number_to_letter",
     "version",
+    "xlsxheets_to_json",
 )

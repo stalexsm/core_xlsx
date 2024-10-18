@@ -1,3 +1,5 @@
+use crate::types::XLSXSheet;
+
 /// Преобразование номера колонки в букву.
 /// Данный метод используется по обработки формирования данных excel.
 /// 1. Принимает номер колонки как `u32`.
@@ -20,6 +22,11 @@ pub fn column_number_to_letter(mut column: u32) -> String {
     }
 
     result.chars().rev().collect()
+}
+
+/// конвертация данных в json
+pub fn xlsxheets_to_json(sheets: Vec<XLSXSheet>) -> String {
+    serde_json::to_string(&sheets).unwrap()
 }
 
 /// Определение формата по типу
