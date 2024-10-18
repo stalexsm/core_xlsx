@@ -8,7 +8,7 @@ class SheetCell:
     row: int
     column: int
     cell: str
-    value: str
+    value: str | None = None
     data_type: str = "s"
     formula: str | None = None
     number_format: str = "Generate"
@@ -26,7 +26,7 @@ class SheetCell:
         row: int,
         col: int,
         cell: str,
-        value: str,
+        value: str | None = None,
     ):
         self.id = uuid4()
         self.row = row

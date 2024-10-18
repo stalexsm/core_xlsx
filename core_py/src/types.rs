@@ -421,9 +421,13 @@ impl WrapperXLSXSheetCell {
 
             // Временное решение.
             let value = if obj.is_instance_of::<PyDict>() {
-                obj.get_item("value")?.extract::<String>()?
+                obj.get_item("value")?
+                    .extract::<String>()
+                    .unwrap_or("".to_string())
             } else {
-                obj.getattr("value")?.extract::<String>()?
+                obj.getattr("value")?
+                    .extract::<String>()
+                    .unwrap_or("".to_string())
             };
 
             s.set_value(value)?;
