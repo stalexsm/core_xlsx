@@ -317,6 +317,24 @@ impl XLSXSheet {
     ) -> Result<Vec<XLSXSheetCell>> {
         HelperSheetCell::find_cells_between_patterns(pattern_after, pattern_before, &self.cells)
     }
+
+    /// Возвращаем все ячейки, которые находятся в диапазоне строк
+    pub fn find_cells_by_range_rows(
+        &self,
+        start_row: u32,
+        end_row: u32,
+    ) -> Result<Vec<XLSXSheetCell>> {
+        HelperSheetCell::find_cells_by_range_rows(start_row, end_row, &self.cells)
+    }
+
+    /// Возвращаем все ячейки, которые находятся в диапазоне колонок
+    pub fn find_cells_by_range_cols(
+        &self,
+        start_col: u32,
+        end_col: u32,
+    ) -> Result<Vec<XLSXSheetCell>> {
+        HelperSheetCell::find_cells_by_range_cols(start_col, end_col, &self.cells)
+    }
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Default)]

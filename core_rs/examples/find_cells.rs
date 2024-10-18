@@ -37,6 +37,16 @@ fn main() -> Result<()> {
 
         let cells = sheet.find_cells_for_cols_pattern_regex("10$", Some(1))?;
         println!("Find Cells For Cols [10$, 1]: {:?}\n", cells);
+
+        let cells = sheet.find_cells_by_range_rows(2, 3)?;
+        for c in cells {
+            println!("Cell{:?}, row: {:?}, col: {:?}", c.cell, c.row, c.column);
+        }
+
+        let cells = sheet.find_cells_by_range_cols(2, 3)?;
+        for c in cells {
+            println!("Cell{:?}, row: {:?}, col: {:?}", c.cell, c.row, c.column);
+        }
     }
 
     Ok(())

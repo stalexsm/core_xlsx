@@ -75,6 +75,24 @@ class XLSXSheet:
         ...
 
     @final
+    def find_cells_by_range_rows(
+        self,
+        start_row: int,
+        end_row: int,
+    ) -> Sequence[XLSXSheetCell]:
+        """Возвращаем все ячейки, которые находятся в диапазоне строк"""
+        ...
+
+    @final
+    def find_cells_by_range_cols(
+        self,
+        start_col: int,
+        end_col: int,
+    ) -> Sequence[XLSXSheetCell]:
+        """Возвращаем все ячейки, которые находятся в диапазоне колонок"""
+        ...
+
+    @final
     def write_cell(self, row: int, col: int, value: str) -> None:
         """Добавление данных в cells"""
         ...
@@ -318,6 +336,26 @@ class HelperSheetCell:
         pattern_1: str, pattern_2: str, cells: Sequence[XLSXSheetCell]
     ) -> Sequence[XLSXSheetCell]:
         """Метод ищет ячейки между двумя патернами."""
+        ...
+
+    @final
+    @staticmethod
+    def find_cells_by_range_rows(
+        start_row: int,
+        end_row: int,
+        cells: Sequence[XLSXSheetCell],
+    ) -> Sequence[XLSXSheetCell]:
+        """Возвращаем все ячейки, которые находятся в диапазоне строк."""
+        ...
+
+    @final
+    @staticmethod
+    def find_cells_by_range_cols(
+        start_col: int,
+        end_col: int,
+        cells: Sequence[XLSXSheetCell],
+    ) -> Sequence[XLSXSheetCell]:
+        """Возвращаем все ячейки, которые находятся в диапазоне колонок."""
         ...
 
 class HelperSheet:

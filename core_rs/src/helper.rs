@@ -256,4 +256,34 @@ impl HelperSheetCell {
 
         Ok(filtered_cells)
     }
+
+    /// Возвращаем все ячейки, которые находятся в диапазоне строк
+    pub fn find_cells_by_range_rows(
+        start_row: u32,
+        end_row: u32,
+        cells: &Vec<XLSXSheetCell>,
+    ) -> Result<Vec<XLSXSheetCell>> {
+        let cells = cells
+            .par_iter()
+            .filter(|c| c.row >= start_row && c.row <= end_row)
+            .cloned()
+            .collect();
+
+        Ok(cells)
+    }
+
+    /// Возвращаем все ячейки, которые находятся в диапазоне колонок
+    pub fn find_cells_by_range_cols(
+        start_col: u32,
+        end_col: u32,
+        cells: &Vec<XLSXSheetCell>,
+    ) -> Result<Vec<XLSXSheetCell>> {
+        let cells = cells
+            .par_iter()
+            .filter(|c| c.column >= start_col && c.column <= end_col)
+            .cloned()
+            .collect();
+
+        Ok(cells)
+    }
 }

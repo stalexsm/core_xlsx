@@ -357,6 +357,38 @@ impl WrapperXLSXSheet {
             })
         })
     }
+
+    /// Возвращаем все ячейки, которые находятся в диапазоне строк
+    pub fn find_cells_by_range_rows(
+        &self,
+        start_row: u32,
+        end_row: u32,
+    ) -> PyResult<Vec<WrapperXLSXSheetCell>> {
+        Python::with_gil(|py| {
+            py.allow_threads(|| {
+                self.0
+                    .find_cells_by_range_rows(start_row, end_row)
+                    .map(|cells| cells.into_iter().map(WrapperXLSXSheetCell).collect())
+                    .map_err(|e| PyRuntimeError::new_err(format!("{}", e)))
+            })
+        })
+    }
+
+    /// Возвращаем все ячейки, которые находятся в диапазоне колонок
+    pub fn find_cells_by_range_cols(
+        &self,
+        start_col: u32,
+        end_col: u32,
+    ) -> PyResult<Vec<WrapperXLSXSheetCell>> {
+        Python::with_gil(|py| {
+            py.allow_threads(|| {
+                self.0
+                    .find_cells_by_range_cols(start_col, end_col)
+                    .map(|cells| cells.into_iter().map(WrapperXLSXSheetCell).collect())
+                    .map_err(|e| PyRuntimeError::new_err(format!("{}", e)))
+            })
+        })
+    }
 }
 
 #[pyclass]
