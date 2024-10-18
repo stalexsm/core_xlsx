@@ -534,6 +534,10 @@ def xlsxheets_to_json(sheets: Sequence[XLSXSheet]) -> str:
     """Преобразование данных в json"""
     ...
 
+def xlsxheets_to_dict(sheets: Sequence[XLSXSheet]) -> str:
+    """Преобразование данных в dict"""
+    ...
+
 __all__ = (
     "Service",
     "HelperSheet",
@@ -543,4 +547,5 @@ __all__ = (
     "column_number_to_letter",
     "version",
     "xlsxheets_to_json",
+    "xlsxheets_to_dict",
 )

@@ -1,4 +1,5 @@
 from core_xlsx import XLSXSheet
+from core_xlsx._core_xlsx import xlsxheets_to_dict
 
 
 if __name__ == "__main__":

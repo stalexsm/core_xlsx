@@ -7,6 +7,7 @@ from ._core_xlsx import (
     column_number_to_letter,
     version,
     xlsxheets_to_json,
+    xlsxheets_to_dict,
 )
 
 
@@ -19,4 +20,5 @@ __all__ = (
     "column_number_to_letter",
     "version",
     "xlsxheets_to_json",
+    "xlsxheets_to_dict",
 )
