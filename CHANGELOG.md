@@ -1,3 +1,13 @@
+## 0.5.0 (2024-10-18)
+
+### Feat
+
+- Добавление новых методов find_cells_by_range_rows и find_cells_by_range_cols для поиска ячеек
+
+### Fix
+
+- Правки в HelperSheetCell, добавление метода iter_cells
+
 ## 0.4.0 (2024-10-18)
 
 ### Feat
