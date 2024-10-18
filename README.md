@@ -16,6 +16,8 @@ poetry add core-xlsx
 - `HelperSheet`: Помощник для работы с несколькими листами и ячейками.
 - `HelperSheetCell`: Помощник для работы с ячейками.
 - `column_number_to_letter`: Функция для преобразования колонки с row в букву (1 -> A).
+- `xlsxheets_to_json`: Функция для преобразования списка данных `Sequence[XLSXSheet]` в json
+- `xlsxheets_to_dict`: Функция для преобразования списка данных `Sequence[XLSXSheet]` в dict
 
 ## Возможности
 
