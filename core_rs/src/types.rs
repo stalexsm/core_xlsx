@@ -117,14 +117,15 @@ impl XLSXSheet {
                 self.cells.push(new_cell);
 
                 // Генерация несуществующих ячеек.
+                let mut new_cells = Vec::with_capacity((row * col) as usize);
                 for r in 1..=row {
                     for c in 1..=col {
                         if !self.cells.iter().any(|x| x.row == r && x.column == c) {
-                            let cell = XLSXSheetCell::new(r, c, None);
-                            self.cells.push(cell);
+                            new_cells.push(XLSXSheetCell::new(r, c, None));
                         }
                     }
                 }
+                self.cells.extend(new_cells);
 
                 // Сортируем, чтобы все было упорядочено.
                 self.cells
