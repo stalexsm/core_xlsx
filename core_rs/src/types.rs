@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use anyhow::{bail, Result};
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
@@ -10,7 +12,6 @@ use crate::{
 
 // Список типов
 const DATA_TYPES: [&str; 4] = ["s", "n", "d", "b"];
-
 #[derive(Clone, Debug, Serialize, Deserialize, Default)]
 pub struct XLSXSheet {
     pub name: String,
@@ -19,15 +20,20 @@ pub struct XLSXSheet {
     pub index: i32,
     pub main: bool,
     pub cells: Vec<XLSXSheetCell>,
+    pub _indexes: HashSet<(u32, u32)>,
 }
 
 impl XLSXSheet {
     pub fn new(name: String, index: i32, cols: u32, rows: u32) -> Self {
         let mut cells = Vec::with_capacity((rows * cols) as usize);
+        let mut indexes = HashSet::new();
         for r in 1..=rows {
             for c in 1..=cols {
                 let cell = XLSXSheetCell::new(r, c, None);
                 cells.push(cell);
+
+                // Insert Indexes
+                indexes.insert((r, c));
             }
         }
 
@@ -37,6 +43,7 @@ impl XLSXSheet {
             cells,
             max_row: rows,
             max_column: cols,
+            _indexes: indexes,
             ..Default::default()
         }
     }
@@ -44,31 +51,32 @@ impl XLSXSheet {
     /// Добавление значения в ячейку по координате.
     /// Дополнительно создаются несуществующие ячейки.
     pub fn write_cell(&mut self, row: u32, col: u32, value: String) -> Result<()> {
-        let cell_index = self
-            .cells
-            .iter()
-            .position(|c| c.row == row && c.column == col);
+        if self._indexes.contains(&(row, col)) {
+            // Ячейка существует, редактируем ее
+            let cell_index = self
+                .cells
+                .iter()
+                .position(|c| c.row == row && c.column == col)
+                .unwrap();
 
-        match cell_index {
-            Some(index) => {
-                self.cells[index].set_value(value)?;
-            }
-            None => {
-                // Обновим максимальные значения
-                self.max_row = self.max_row.max(row);
-                self.max_column = self.max_column.max(col);
+            // Редактирование
+            self.cells[cell_index].set_value(value)?;
+        } else {
+            // Ячейка не существует, добавляем новую
+            let new_cell = XLSXSheetCell::new(row, col, Some(value));
+            self.cells.push(new_cell);
+            self._indexes.insert((row, col));
 
-                // Добавление заданной ячейки
-                let new_cell = XLSXSheetCell::new(row, col, Some(value));
-                self.cells.push(new_cell);
+            let mr = row as i32 - self.max_row as i32;
+            let mc = col as i32 - self.max_column as i32;
 
+            if mr > 1 || mc > 1 {
                 // Генерация несуществующих ячеек.
                 let mut new_cells = Vec::with_capacity((row * col) as usize);
-                for r in 1..=row {
-                    for c in 1..=col {
-                        if !self.cells.iter().any(|x| x.row == r && x.column == c) {
-                            new_cells.push(XLSXSheetCell::new(r, c, None));
-                        }
+                for r in (self.max_row + 1)..row {
+                    for c in (self.max_column + 1)..col {
+                        new_cells.push(XLSXSheetCell::new(r, c, None));
+                        self._indexes.insert((r, c));
                     }
                 }
                 self.cells.extend(new_cells);
@@ -77,6 +85,10 @@ impl XLSXSheet {
                 self.cells
                     .sort_by(|a, b| a.row.cmp(&b.row).then_with(|| a.column.cmp(&b.column)));
             }
+
+            // Обновим максимальные значения
+            self.max_row = self.max_row.max(row);
+            self.max_column = self.max_column.max(col);
         }
         Ok(())
     }
@@ -90,39 +102,36 @@ impl XLSXSheet {
         value: String,
         formula: String,
     ) -> Result<()> {
-        let cell_index = self
-            .cells
-            .iter()
-            .position(|c| c.row == row && c.column == col);
+        if self._indexes.contains(&(row, col)) {
+            // Ячейка существует, редактируем ее
+            let cell_index = self
+                .cells
+                .iter()
+                .position(|c| c.row == row && c.column == col)
+                .unwrap();
 
-        match cell_index {
-            Some(index) => {
-                let cell = &mut self.cells[index];
-                cell.set_value(value)?;
+            // Редактирование
+            let cell = &mut self.cells[cell_index];
+            cell.set_value(value)?;
+            cell.set_formula(formula)?;
+        } else {
+            // Ячейка не существует, добавляем новую
+            let mut new_cell = XLSXSheetCell::new(row, col, Some(value));
+            new_cell.set_formula(formula)?;
 
-                // Установим формулу
-                cell.set_formula(formula)?;
-                cell.data_type = "f".to_string();
-            }
-            None => {
-                // Обновим максимальные значения
-                self.max_row = self.max_row.max(row);
-                self.max_column = self.max_column.max(col);
+            self.cells.push(new_cell);
+            self._indexes.insert((row, col));
 
-                // Добавление заданной ячейки
-                let mut new_cell = XLSXSheetCell::new(row, col, Some(value));
-                new_cell.set_formula(formula)?;
-                new_cell.set_data_type("f".to_string())?;
+            let mr = row as i32 - self.max_row as i32;
+            let mc = col as i32 - self.max_column as i32;
 
-                self.cells.push(new_cell);
-
+            if mr > 1 || mc > 1 {
                 // Генерация несуществующих ячеек.
                 let mut new_cells = Vec::with_capacity((row * col) as usize);
-                for r in 1..=row {
-                    for c in 1..=col {
-                        if !self.cells.iter().any(|x| x.row == r && x.column == c) {
-                            new_cells.push(XLSXSheetCell::new(r, c, None));
-                        }
+                for r in (self.max_row + 1)..row {
+                    for c in (self.max_column + 1)..col {
+                        new_cells.push(XLSXSheetCell::new(r, c, None));
+                        self._indexes.insert((r, c));
                     }
                 }
                 self.cells.extend(new_cells);
@@ -131,20 +140,26 @@ impl XLSXSheet {
                 self.cells
                     .sort_by(|a, b| a.row.cmp(&b.row).then_with(|| a.column.cmp(&b.column)));
             }
+
+            // Обновим максимальные значения
+            self.max_row = self.max_row.max(row);
+            self.max_column = self.max_column.max(col);
         }
         Ok(())
     }
 
     /// Добавление стиля в существующую ячейку по координате.
     pub fn write_style_for_cell(&mut self, row: u32, col: u32, style_id: String) -> Result<()> {
-        let cell_index = self
-            .cells
-            .iter()
-            .position(|c| c.row == row && c.column == col);
+        if self._indexes.contains(&(row, col)) {
+            // Ячейка существует, редактируем ее
+            let cell_index = self
+                .cells
+                .iter()
+                .position(|c| c.row == row && c.column == col)
+                .unwrap();
 
-        if let Some(index) = cell_index {
-            let cell = &mut self.cells[index];
-            cell.set_style_id(style_id)?;
+            // Редактирование
+            self.cells[cell_index].set_style_id(style_id)?;
         }
 
         Ok(())
@@ -152,16 +167,16 @@ impl XLSXSheet {
 
     /// Добавление стиля в существующую ячейку по координате.
     pub fn write_formula_for_cell(&mut self, row: u32, col: u32, formula: String) -> Result<()> {
-        let cell_index = self
-            .cells
-            .iter()
-            .position(|c| c.row == row && c.column == col);
+        if self._indexes.contains(&(row, col)) {
+            // Ячейка существует, редактируем ее
+            let cell_index = self
+                .cells
+                .iter()
+                .position(|c| c.row == row && c.column == col)
+                .unwrap();
 
-        if let Some(index) = cell_index {
-            let cell = &mut self.cells[index];
-
-            cell.set_formula(formula)?;
-            cell.set_data_type("f".to_string())?;
+            // Редактирование
+            self.cells[cell_index].set_formula(formula)?;
         }
 
         Ok(())
