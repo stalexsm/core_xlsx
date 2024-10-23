@@ -73,10 +73,11 @@ impl XLSXSheet {
             if mr > 1 || mc > 1 {
                 // Генерация несуществующих ячеек.
                 let mut new_cells = Vec::with_capacity((row * col) as usize);
-                for r in (self.max_row + 1)..row {
-                    for c in (self.max_column + 1)..col {
-                        new_cells.push(XLSXSheetCell::new(r, c, None));
-                        self._indexes.insert((r, c));
+                for r in 1..=row {
+                    for c in 1..=col {
+                        if self._indexes.insert((r, c)) {
+                            new_cells.push(XLSXSheetCell::new(r, c, None));
+                        }
                     }
                 }
                 self.cells.extend(new_cells);
@@ -128,10 +129,11 @@ impl XLSXSheet {
             if mr > 1 || mc > 1 {
                 // Генерация несуществующих ячеек.
                 let mut new_cells = Vec::with_capacity((row * col) as usize);
-                for r in (self.max_row + 1)..row {
-                    for c in (self.max_column + 1)..col {
-                        new_cells.push(XLSXSheetCell::new(r, c, None));
-                        self._indexes.insert((r, c));
+                for r in 1..=row {
+                    for c in 1..=col {
+                        if self._indexes.insert((r, c)) {
+                            new_cells.push(XLSXSheetCell::new(r, c, None));
+                        }
                     }
                 }
                 self.cells.extend(new_cells);
@@ -179,6 +181,7 @@ impl XLSXSheet {
             .retain(|cell| cell.column < idx || cell.column >= idx + amount);
 
         // Update column numbers for remaining cells
+        let mut indexes = HashSet::new();
         for cell in &mut self.cells {
             if cell.column > idx {
                 cell.column -= amount;
@@ -186,7 +189,11 @@ impl XLSXSheet {
                 let new_letter = column_number_to_letter(cell.column);
                 cell.cell = format!("{}{}", new_letter, cell.row);
             }
+
+            indexes.insert((cell.row, cell.column));
         }
+        // Заменим на актуальные
+        self._indexes = indexes;
 
         // Update max_column if necessary
         self.max_column = self.max_column.saturating_sub(amount);
@@ -205,6 +212,7 @@ impl XLSXSheet {
             .retain(|cell| cell.row < idx || cell.row >= idx + amount);
 
         // Update row numbers for remaining cells
+        let mut indexes = HashSet::new();
         for cell in &mut self.cells {
             if cell.row > idx {
                 cell.row -= amount;
@@ -212,7 +220,12 @@ impl XLSXSheet {
                 let letter = column_number_to_letter(cell.column);
                 cell.cell = format!("{}{}", letter, cell.row);
             }
+
+            indexes.insert((cell.row, cell.column));
         }
+
+        // Заменим на актуальные
+        self._indexes = indexes;
 
         // Update max_row if necessary
         self.max_row = self.max_row.saturating_sub(amount);
