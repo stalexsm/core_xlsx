@@ -150,35 +150,25 @@ impl XLSXSheet {
 
     /// Добавление стиля в существующую ячейку по координате.
     pub fn write_style_for_cell(&mut self, row: u32, col: u32, style_id: String) -> Result<()> {
-        if self._indexes.contains(&(row, col)) {
-            // Ячейка существует, редактируем ее
-            let cell_index = self
-                .cells
-                .iter()
-                .position(|c| c.row == row && c.column == col)
-                .unwrap();
+        let index = self
+            .cells
+            .binary_search_by_key(&(row, col), |c| (c.row, c.column));
 
-            // Редактирование
-            self.cells[cell_index].set_style_id(style_id)?;
+        if let Ok(index) = index {
+            self.cells[index].set_style_id(style_id)?;
         }
-
         Ok(())
     }
 
     /// Добавление стиля в существующую ячейку по координате.
     pub fn write_formula_for_cell(&mut self, row: u32, col: u32, formula: String) -> Result<()> {
-        if self._indexes.contains(&(row, col)) {
-            // Ячейка существует, редактируем ее
-            let cell_index = self
-                .cells
-                .iter()
-                .position(|c| c.row == row && c.column == col)
-                .unwrap();
+        let index = self
+            .cells
+            .binary_search_by_key(&(row, col), |c| (c.row, c.column));
 
-            // Редактирование
-            self.cells[cell_index].set_formula(formula)?;
+        if let Ok(index) = index {
+            self.cells[index].set_formula(formula)?;
         }
-
         Ok(())
     }
 
