@@ -1,3 +1,9 @@
+## 0.5.3 (2024-10-23)
+
+### Fix
+
+- Ускорение методов write_style_for_cell и write_formula_for_cell
+
 ## 0.5.2 (2024-10-23)
 
 ### Fix
