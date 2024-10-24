@@ -181,7 +181,7 @@ impl XLSXSheet {
             .retain(|cell| cell.column < idx || cell.column >= idx + amount);
 
         // Update column numbers for remaining cells
-        let mut indexes = HashSet::new();
+        self._indexes.clear();
         for cell in &mut self.cells {
             if cell.column > idx {
                 cell.column -= amount;
@@ -190,10 +190,9 @@ impl XLSXSheet {
                 cell.cell = format!("{}{}", new_letter, cell.row);
             }
 
-            indexes.insert((cell.row, cell.column));
+            // Запишем актуальные
+            self._indexes.insert((cell.row, cell.column));
         }
-        // Заменим на актуальные
-        self._indexes = indexes;
 
         // Update max_column if necessary
         self.max_column = self.max_column.saturating_sub(amount);
@@ -212,7 +211,7 @@ impl XLSXSheet {
             .retain(|cell| cell.row < idx || cell.row >= idx + amount);
 
         // Update row numbers for remaining cells
-        let mut indexes = HashSet::new();
+        self._indexes.clear();
         for cell in &mut self.cells {
             if cell.row > idx {
                 cell.row -= amount;
@@ -221,11 +220,9 @@ impl XLSXSheet {
                 cell.cell = format!("{}{}", letter, cell.row);
             }
 
-            indexes.insert((cell.row, cell.column));
+            // Запишем актуальные
+            self._indexes.insert((cell.row, cell.column));
         }
-
-        // Заменим на актуальные
-        self._indexes = indexes;
 
         // Update max_row if necessary
         self.max_row = self.max_row.saturating_sub(amount);
