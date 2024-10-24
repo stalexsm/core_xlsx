@@ -522,4 +522,18 @@ impl XLSXSheetCell {
 
         Ok(())
     }
+
+    /// Метод для добавления тех значения ячейки
+    pub fn set_hidden_value(&mut self, value: String) -> Result<()> {
+        self.hidden_value = Some(value);
+
+        Ok(())
+    }
+
+    /// Метод для добавления комментария к ячейки
+    pub fn set_comment(&mut self, value: String) -> Result<()> {
+        self.comment = Some(value);
+
+        Ok(())
+    }
 }

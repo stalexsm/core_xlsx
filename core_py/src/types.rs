@@ -559,21 +559,21 @@ impl WrapperXLSXSheetCell {
         })
     }
 
-    /// Метод для добавления технического (скрытого) значения
+    /// Метод для добавления тех значения ячейки
     pub fn set_hidden_value(&mut self, value: String) -> PyResult<()> {
         Python::with_gil(|_py| {
-            self.0.hidden_value = Some(value);
-
-            Ok(())
+            self.0
+                .set_hidden_value(value)
+                .map_err(|e| PyRuntimeError::new_err(format!("{}", e)))
         })
     }
 
-    /// Метод для добавления комментария
+    /// Метод для добавления комментария к ячейки
     pub fn set_comment(&mut self, value: String) -> PyResult<()> {
         Python::with_gil(|_py| {
-            self.0.comment = Some(value);
-
-            Ok(())
+            self.0
+                .set_comment(value)
+                .map_err(|e| PyRuntimeError::new_err(format!("{}", e)))
         })
     }
 
